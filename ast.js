@@ -252,12 +252,28 @@ class MeiTua {
         })
     }
 
+    kuf() {
+        traverse(this.ast, {
+            SequenceExpression: (path) => {
+                let {parentPath, node} = path;
+                if (!types.isExpressionStatement(parentPath.node)) return;
+                let exp = node.expressions;
+                if (exp.length === 1) return;
+                let pjs = exp.map(r => {
+                    return types.expressionStatement(r)
+                });
+                parentPath.replaceWithMultiple(pjs)
+            }
+        })
+    }
+
     start() {
         this.kis();
         this.jub();
         this.kov();
         this.sky();
         this.igr();
+        this.kuf();
         this.save_file();
     }
 
